@@ -20,7 +20,6 @@ class Solution {
             int n = Integer.parseInt(sb.append(N).toString());
             q.add(new Integer[]{n, i});
         }
-        q.add(new Integer[]{N, 1});
         q.add(new Integer[]{-N, 1});
         while(!q.isEmpty()){
             Integer[] n = q.poll();
