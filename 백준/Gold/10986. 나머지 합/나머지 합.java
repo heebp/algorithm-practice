@@ -21,12 +21,12 @@ public class Main {
         for (int i = 1; i < N; i++)
             sum[i] = arr[i] + sum[i - 1];
 
-        Map<Long, Long> map = new HashMap<>();
+        Map<Long, Integer> map = new HashMap<>();
         for (int i = 0; i < N; i++)
-            map.put(sum[i] % M, map.getOrDefault(sum[i] % M, 0L) + 1);
+            map.put(sum[i] % M, map.getOrDefault(sum[i] % M, 0) + 1);
 
-        long res = map.getOrDefault(0L, 0L);
-        for (Map.Entry<Long, Long> entry : map.entrySet()) {
+        long res = map.getOrDefault(0L, 0);
+        for (Map.Entry<Long, Integer> entry : map.entrySet()) {
             long n = entry.getValue();
             if(n > 1)
                 res += n * (n - 1) / 2;
