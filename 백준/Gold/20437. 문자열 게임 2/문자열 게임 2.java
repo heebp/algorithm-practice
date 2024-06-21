@@ -14,9 +14,15 @@ public class Main {
             int max = Integer.MIN_VALUE;
             Map<Character, List<Integer>> map = new HashMap<>();
             for (int j = 0; j < W.length(); j++) {
-                List<Integer> idx = map.getOrDefault(W.charAt(j), new ArrayList<>());
+                boolean wasNull = false;
+                List<Integer> idx = map.get(W.charAt(j));
+                if(idx == null) {
+                    idx = new ArrayList<>();
+                    wasNull = true;
+                }
                 idx.add(j);
-                map.put(W.charAt(j), idx);
+                if(wasNull)
+                    map.put(W.charAt(j), idx);
             }
             for (List<Integer> list : map.values()) {
                 if(list.size() >= K){
