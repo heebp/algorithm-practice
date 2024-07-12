@@ -1,41 +1,37 @@
 import java.util.*;
 
 class Solution {
-    static boolean[] visited;
     public int solution(String begin, String target, String[] words) {
         int answer = 0;
-        visited = new boolean[words.length];
+        answer = recur(begin, 0, target, words, new HashSet<>());
+        return answer == Integer.MAX_VALUE ? 0 : answer;
+    }
+    int recur(String word, int cnt, String target, String[] words, Set<String> set){
+        if(word.equals(target))
+            return cnt;
         
-        answer = bfs(begin, target, words, visited);
-        return answer;
-    }
-    int bfs(String begin, String target, String[] words, boolean[] visited){
-        Queue<int[]> q = new LinkedList<>();
-        add(begin, words, q, 0);
-        while(!q.isEmpty()){
-            int[] index = q.poll();
-            String word = words[index[0]];
-            if(word.equals(target))
-                return index[1];
-            add(word, words, q, index[1]);
-        }
-        return 0;
-    }
-    
-    void add(String word, String[] words, Queue<int[]> q, int cnt){
-        int length = word.length();
+        int min = Integer.MAX_VALUE;
         for(int i = 0; i < words.length; i++){
-            if(visited[i])
+            if(set.contains(words[i]))
                 continue;
-            int hit = 0;
-            for(int j = 0; j < length; j++){
-                if(word.charAt(j) == words[i].charAt(j))
-                    hit++;
-            }
-            if(length == hit + 1){
-                visited[i] = true;
-                q.add(new int[]{i, cnt + 1});
-            }
+            String next = canConvert(word, words[i]);
+            if(next == null)
+                continue;
+            set.add(next);
+            min = Math.min(min, recur(next, cnt + 1, target, words, set));
+            set.remove(next);
         }
+        return min;
+    }
+    String canConvert(String cur, String candidate){
+        int hit = 0;
+        
+        for(int i = 0; i < cur.length(); i++){
+            if(cur.charAt(i) == candidate.charAt(i))
+                hit++;
+        }
+        if(cur.length() - 1 == hit)
+            return candidate;
+        return null;
     }
 }
