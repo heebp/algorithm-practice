@@ -46,8 +46,6 @@ class Solution {
                 q.add(new int[]{nr, nc, v, i});
             }
         }
-        if(board.length > 5)
-            System.out.println(visited[3][3]);
         return min;
     }
     
