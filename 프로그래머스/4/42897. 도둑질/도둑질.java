@@ -4,19 +4,21 @@
 
 class Solution {
     public int solution(int[] money) {
-        int answer = 0;
-        int[] dp = new int[money.length + 1];
-        dp = money.clone();
-        dp[0] = 0;
-        money[1] = money[0] > money[1] ? money[0] : money[1];
-        for(int i = 2; i < money.length - 1; i++){
-            money[i] = Math.max(money[i - 1], money[i - 2] + money[i]);
+        int curr1 = 0, prev1 = 0;
+        int curr2 = 0, prev2 = 0;
+        
+        for (int i = 0; i < money.length-1; i++) {
+            int temp1 = curr1;
+            curr1 = Math.max(temp1, prev1+money[i]);
+            prev1 = temp1;
         }
-
-        for(int i = 2; i < dp.length; i++){
-            dp[i] = Math.max(dp[i - 1], dp[i - 2] + dp[i]);
+        
+        for (int i = 1; i < money.length; i++) {
+            int temp2 = curr2;
+            curr2 = Math.max(temp2, prev2+money[i]);
+            prev2 = temp2;
         }
-        answer = Math.max(money[money.length - 2], dp[dp.length - 1]);
-        return answer;
+        
+        return Math.max(curr1, curr2);
     }
 }
