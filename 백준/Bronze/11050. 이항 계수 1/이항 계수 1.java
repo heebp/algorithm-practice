@@ -14,7 +14,7 @@ public class Main {
         for(int i = 1; i < 11; i++){
             mul[i] = mul[i - 1] * i;
         }
-        System.out.println(k == 0 ? 1 : mul[n] / mul[n - k] / mul[k]);
+        System.out.println(mul[n] / mul[n - k] / mul[k]);
         br.close();
     }
 }
