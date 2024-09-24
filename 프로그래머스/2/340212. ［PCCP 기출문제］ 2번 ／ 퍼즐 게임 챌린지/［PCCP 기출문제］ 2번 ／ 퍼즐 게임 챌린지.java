@@ -1,42 +1,44 @@
 public class Solution {
 
     public int solution(int[] diffs, int[] times, long limit) {
-        int n = diffs.length;
-        int maxDiff = 0;
+        int answer = 0;
+        answer = binarySearch(diffs, times, limit);
+        return answer;
+    }
+    
+    int binarySearch(int[] diffs, int[] times, long limit){
+        int low = 1;
+        int high = 0;
         for (int diff : diffs) {
-            if (diff > maxDiff) maxDiff = diff;
+            if (diff > high) 
+                high = diff;
         }
-
-        int low = 1, high = maxDiff;
-        int answer = maxDiff;  // Initialize with the maximum possible level
-
+        
         while (low <= high) {
             int mid = (low + high) / 2;
             if (isPossible(diffs, times, limit, mid)) {
-                answer = mid;
-                high = mid -1;
+                high = mid - 1;
             } else {
-                low = mid +1;
+                low = mid + 1;
             }
         }
-        return answer;
+        return low;
     }
+    
+    boolean isPossible(int[] diffs, int[] times, long limit, int level) {
+        long total_time = times[0];
 
-    private boolean isPossible(int[] diffs, int[] times, long limit, int level) {
-        int n = diffs.length;
-        long total_time = times[0];  // Start with the time of the first puzzle
-
-        for (int i = 1; i < n; i++) {
+        for (int i = 1; i < diffs.length; i++) {
             if (diffs[i] <= level) {
                 total_time += times[i];
             } else {
-                long mistakes = diffs[i] - level;
-                total_time += mistakes * (times[i] + times[i -1]) + times[i];
+                long mistake = diffs[i] - level;
+                total_time += mistake * (times[i] + times[i - 1]) + times[i];
             }
             if (total_time > limit) {
-                return false;  // Early exit if the limit is exceeded
+                return false;  
             }
         }
-        return total_time <= limit;
+        return true;
     }
 }
