@@ -3,69 +3,54 @@ import java.util.*;
 class Solution {
     public int solution(int m, int n, String[] board) {
         int answer = 0;
-        char[][] nboard = new char[m][n];
-        for(int i = 0; i < m; i++){
-            for(int j = 0; j < n; j++){
-                nboard[i][j] = board[i].charAt(j);
+        char[][] cboard = new char[m][n];
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[0].length(); j++){
+                cboard[i][j] = board[i].charAt(j);
             }
         }
-        boolean isBoardFixed = false;
-        while(!isBoardFixed){
-            List<int[]> point = findBlock(m, n, nboard);
-            answer += removeBlock(point, nboard);
-            isBoardFixed = moveBlock(nboard);
+        
+        while(true){
+            Set<List<Integer>> deletePos = findFourBlock(cboard);
+            answer += deletePos.size();
+            for(List<Integer> pos : deletePos)
+                cboard[pos.get(0)][pos.get(1)] = '0';
+            if(deletePos.isEmpty())
+                break;
+            moveBoard(cboard);
         }
         return answer;
     }
-    
-    List<int[]> findBlock(int m, int n, char[][] board){
-        List<int[]> list = new ArrayList<>();
-        for(int i = 0; i < m - 1; i++){
-            for(int j = 0;  j < n - 1; j++){
-                char a = board[i][j];
-                char b = board[i + 1][j];
-                char c = board[i][j + 1];
-                char d = board[i + 1][j + 1];
-                if(a == 0)
-                    continue;
-                if(a == b && b == c && c == d){
-                    list.add(new int[]{i, j});
-                    list.add(new int[]{i + 1, j});
-                    list.add(new int[]{i, j + 1});
-                    list.add(new int[]{i + 1, j + 1});
+    Set<List<Integer>> findFourBlock(char[][] cboard){
+        Set<List<Integer>> res = new HashSet<>();
+        for(int i = 0; i < cboard.length - 1; i++){
+            for(int j = 0; j < cboard[0].length - 1; j++){
+                if(cboard[i][j] != '0' && cboard[i][j] == cboard[i + 1][j] &&
+                   cboard[i][j] == cboard[i][j + 1] &&
+                   cboard[i][j] == cboard[i + 1][j + 1]){
+                    res.add(List.of(i, j));
+                    res.add(List.of(i, j + 1));
+                    res.add(List.of(i + 1, j));
+                    res.add(List.of(i + 1, j + 1));
                 }
             }
         }
-        return list;
+        return res;
     }
-    int removeBlock(List<int[]> point, char[][] board){
-        int removeCnt = 0;
-        for(int[] p : point){
-            char c = board[p[0]][p[1]];
-            if(c == 0)
-                continue;
-            board[p[0]][p[1]] = 0;
-            removeCnt++;
-        }
-        return removeCnt;
-    }
-    
-    boolean moveBlock(char[][] board){
-        boolean isBlockNotMoved = true;
-        for(int i = 0; i < board[0].length; i++){
-            for(int j = board.length - 1; j > 0; j-- ){
-                if(board[j][i] == 0){
-                    for(int k = 1; j - k >= 0; k++){
-                        if(board[j - k][i] != 0){
-                            board[j][i] = board[j - k][i];
-                            board[j - k][i] = 0;
-                            isBlockNotMoved = false;
-                            break;
-                        }
+    void moveBoard(char[][] board){
+        for(int i = board.length - 1; i > 0; i--){
+            boolean flag = false;
+            for(int j = 0; j < board[0].length; j++){
+                if(board[i][j] != '0')
+                    continue;
+                for(int k = i - 1; k >= 0; k--){
+                    if(board[k][j] != '0'){
+                        board[i][j] = board[k][j];
+                        board[k][j] = '0';
+                        break;
                     }
                 }
             }
         }
-        return isBlockNotMoved;
     }
 }
